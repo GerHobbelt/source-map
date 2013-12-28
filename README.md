@@ -1,28 +1,34 @@
-# Source Map
+# Source Map Cjs
 
 This is a library to generate and consume the source map format
 [described here][format].
 
-This library is written in the Asynchronous Module Definition format, and works
-in the following environments:
+~~This library is written in the Asynchronous Module Definition format, and works
+in the following environments:~~
 
-* Modern Browsers supporting ECMAScript 5 (either after the build, or with an
-  AMD loader such as RequireJS)
+* ~~Modern Browsers supporting ECMAScript 5 (either after the build, or with an
+  AMD loader such as RequireJS)~~
 
-* Inside Firefox (as a JSM file, after the build)
+* ~~Inside Firefox (as a JSM file, after the build)~~
 
-* With NodeJS versions 0.8.X and higher
+* ~~With NodeJS versions 0.8.X and higher~~
+
+It's just using common-js format now, and works in any browser via
+[browserify](https://github.com/substack/node-browserify).
+
+Additionally features used that aren't available in older browsers have been replaced. The only ES5 functions you'll need to
+shim are `Array.map`, `Array.forEach` and in some cases `Array.isArray`.
 
 ## Node
 
-    $ npm install source-map
+    $ npm install source-map-cjs
 
 ## Building from Source (for everywhere else)
 
 Install Node and then run
 
-    $ git clone https://fitzgen@github.com/mozilla/source-map.git
-    $ cd source-map
+    $ git clone https://github.com/thlorenz/source-map-cjs.git
+    $ cd source-map-cjs
     $ npm link .
 
 Next, run
@@ -397,7 +403,7 @@ The arguments are the same as those to `new SourceMapGenerator`.
 
 ## Tests
 
-[![Build Status](https://travis-ci.org/mozilla/source-map.png?branch=master)](https://travis-ci.org/mozilla/source-map)
+[![Build Status](https://travis-ci.org/thlorenz/source-map-cjs.png?branch=master)](https://travis-ci.org/thlorenz/source-map-cjs)
 
 Install NodeJS version 0.8.0 or greater, then run `node test/run-tests.js`.
 

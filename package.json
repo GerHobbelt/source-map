@@ -1,8 +1,8 @@
 {
-  "name": "source-map",
-  "description": "Generates and consumes source maps",
+  "name": "source-map-cjs",
+  "description": "Generates and consumes source maps. Adapted to be commonjs only and work in older browsers.",
   "version": "0.1.31",
-  "homepage": "https://github.com/mozilla/source-map",
+  "homepage": "https://github.com/thlorenz/source-map-cjs",
   "author": "Nick Fitzgerald <nfitzgerald@mozilla.com>",
   "contributors": [
     "Tobias Koppers <tobias.koppers@googlemail.com>",
@@ -20,11 +20,12 @@
     "David Glasser <glasser@davidglasser.net>",
     "Chase Douglas <chase@newrelic.com>",
     "Evan Wallace <evan.exe@gmail.com>",
-    "Heather Arthur <fayearthur@gmail.com>"
+    "Heather Arthur <fayearthur@gmail.com>",
+    "Thorsten Lorenz <thlorenz@gmx.de>"
   ],
   "repository": {
     "type": "git",
-    "url": "http://github.com/mozilla/source-map.git"
+    "url": "http://github.com/thlorenz/source-map-cjs.git"
   },
   "directories": {
     "lib": "./lib"
@@ -47,5 +48,8 @@
   "scripts": {
     "test": "node test/run-tests.js",
     "build": "node Makefile.dryice.js"
-  }
+  },
+  "keywords": [
+    "source", "map", "sourcemap", "source-map", "consume", "parse", "generate", "commonjs", "browserify", "IE"
+  ]
 }
