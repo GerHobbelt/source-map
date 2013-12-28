@@ -42,8 +42,7 @@
   "dependencies": {
   },
   "devDependencies": {
-    "dryice": ">=0.4.8",
-    "amdefine": ">=0.0.4"
+    "dryice": ">=0.4.8"
   },
   "scripts": {
     "test": "node test/run-tests.js",
