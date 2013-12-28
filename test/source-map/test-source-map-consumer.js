@@ -19,7 +19,7 @@ exports['test that we can instantiate with a string or an objects'] = function (
 
 exports['test that the `sources` field has the original sources'] = function (assert, util) {
   var map = new SourceMapConsumer(util.testMap);
-  var sources = map.sources;
+  var sources = map.sources();
 
   assert.equal(sources[0], '/the/root/one.js');
   assert.equal(sources[1], '/the/root/two.js');
@@ -151,7 +151,7 @@ exports['test that the `sourcesContent` field has the original sources'] = funct
 
 exports['test that we can get the original sources for the sources'] = function (assert, util) {
   var map = new SourceMapConsumer(util.testMapWithSourcesContent);
-  var sources = map.sources;
+  var sources = map.sources();
 
   assert.equal(map.sourceContentFor(sources[0]), ' ONE.foo = function (bar) {\n   return baz(bar);\n };');
   assert.equal(map.sourceContentFor(sources[1]), ' TWO.inc = function (n) {\n   return n + 1;\n };');
@@ -241,7 +241,7 @@ exports['test github issue #56'] = function (assert, util) {
   });
   map = new SourceMapConsumer(map.toString());
 
-  var sources = map.sources;
+  var sources = map.sources();
   assert.equal(sources.length, 1);
   assert.equal(sources[0], 'http://www.example.com/original.js');
 };
@@ -258,7 +258,7 @@ exports['test github issue #43'] = function (assert, util) {
   });
   map = new SourceMapConsumer(map.toString());
 
-  var sources = map.sources;
+  var sources = map.sources();
   assert.equal(sources.length, 1,
                 'Should only be one source.');
   assert.equal(sources[0], 'http://cdn.example.com/original.js',
@@ -277,7 +277,7 @@ exports['test absolute path, but same host sources'] = function (assert, util) {
   });
   map = new SourceMapConsumer(map.toString());
 
-  var sources = map.sources;
+  var sources = map.sources();
   assert.equal(sources.length, 1,
                 'Should only be one source.');
   assert.equal(sources[0], 'http://example.com/original.js',
@@ -310,7 +310,7 @@ exports['test bug 885597'] = function (assert, util) {
     "sourcesContent": ["foo"]
   });
 
-  var s = map.sources[0];
+  var s = map.sources()[0];
   assert.equal(map.sourceContentFor(s), "foo");
 };
 
@@ -405,9 +405,9 @@ exports['test SourceMapConsumer.fromSourceMap'] = function (assert, util) {
   var smc = SourceMapConsumer.fromSourceMap(smg);
   assert.equal(smc.file, 'foo.js');
   assert.equal(smc.sourceRoot, 'http://example.com/');
-  assert.equal(smc.sources.length, 2);
-  assert.equal(smc.sources[0], 'http://example.com/bar.js');
-  assert.equal(smc.sources[1], 'http://example.com/baz.js');
+  assert.equal(smc.sources().length, 2);
+  assert.equal(smc.sources()[0], 'http://example.com/bar.js');
+  assert.equal(smc.sources()[1], 'http://example.com/baz.js');
   assert.equal(smc.sourceContentFor('baz.js'), 'baz.js content');
 
   var pos = smc.originalPositionFor({

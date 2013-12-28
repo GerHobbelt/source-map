@@ -331,9 +331,9 @@ exports['test setSourceContent with toStringWithSourceMap'] = function (assert, 
   assert.ok(map instanceof SourceMapGenerator, 'map instanceof SourceMapGenerator');
   map = new SourceMapConsumer(map.toString());
 
-  assert.equal(map.sources.length, 2);
-  assert.equal(map.sources[0], 'a.js');
-  assert.equal(map.sources[1], 'b.js');
+  assert.equal(map.sources().length, 2);
+  assert.equal(map.sources()[0], 'a.js');
+  assert.equal(map.sources()[1], 'b.js');
   assert.equal(map.sourcesContent.length, 2);
   assert.equal(map.sourcesContent[0], 'someContent');
   assert.equal(map.sourcesContent[1], 'otherContent');

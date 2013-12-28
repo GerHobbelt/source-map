@@ -52,7 +52,7 @@ This should spew a bunch of stuff to stdout, and create the following files:
 
     var smc = new SourceMapConsumer(rawSourceMap);
 
-    console.log(smc.sources);
+    console.log(smc.sources());
     // [ 'http://example.com/www/js/one.js',
     //   'http://example.com/www/js/two.js' ]
 
@@ -162,7 +162,7 @@ following attributes:
 
 * `version`: Which version of the source map spec this map is following.
 
-* `sources`: An array of URLs to the original source files.
+* `sources`: A function returning an array of URLs to the original source files.
 
 * `names`: An array of identifiers which can be referrenced by individual
   mappings.
