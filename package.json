@@ -1,7 +1,7 @@
 {
   "name": "source-map-cjs",
   "description": "Generates and consumes source maps. Adapted to be commonjs only and work in older browsers.",
-  "version": "0.1.31",
+  "version": "0.1.32",
   "homepage": "https://github.com/thlorenz/source-map-cjs",
   "author": "Nick Fitzgerald <nfitzgerald@mozilla.com>",
   "contributors": [
@@ -40,8 +40,7 @@
       "url": "http://opensource.org/licenses/BSD-3-Clause"
     }
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "dryice": ">=0.4.8"
   },
@@ -50,6 +49,15 @@
     "build": "node Makefile.dryice.js"
   },
   "keywords": [
-    "source", "map", "sourcemap", "source-map", "consume", "parse", "generate", "commonjs", "browserify", "IE"
+    "source",
+    "map",
+    "sourcemap",
+    "source-map",
+    "consume",
+    "parse",
+    "generate",
+    "commonjs",
+    "browserify",
+    "IE"
   ]
 }
