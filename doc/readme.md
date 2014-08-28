@@ -80,7 +80,7 @@ This should spew a bunch of stuff to stdout, and create the following files:
     }));
     // { line: 2, column: 28 }
 
-    smc.eachMapping(function (m){
+    smc.eachMapping(function (m){~lb}
       // ...
     });
 
@@ -459,50 +459,7 @@ shimmed in that environment. See `build/assert-shim.js`.)
 
 
 # API
-#Index
-
-**Functions**
-
-* [encode()](#encode)
-* [decode()](#decode)
-* [encode()](#encode)
-* [decode()](#decode)
-* [search(aNeedle, aHaystack, aCompare)](#search)
- 
-<a name="encode"></a>
-#encode()
-Returns the base 64 VLQ encoded value.
-
-<a name="decode"></a>
-#decode()
-Decodes the next base 64 VLQ value from the given string and returns the
-value and the rest of the string.
-
-<a name="encode"></a>
-#encode()
-Encode an integer in the range of 0 to 63 to a single base 64 digit.
-
-<a name="decode"></a>
-#decode()
-Decode a single base 64 digit to an integer.
-
-<a name="search"></a>
-#search(aNeedle, aHaystack, aCompare)
-This is an implementation of binary search which will always try and return
-the next lowest value checked if there is no exact hit. This is because
-mappings between original and generated line/col pairs are single points,
-and there is an implicit region between each of them, so a miss just means
-that you aren't on the very start of a region.
-
-**Params**
-
-- aNeedle  - The element you are looking for.  
-- aHaystack  - The array that is being searched.  
-- aCompare  - A function which takes the needle and an element in the
-    array and returns -1, 0, or 1 depending on whether the needle is less
-    than, equal to, or greater than the element, respectively.  
-
-
+{{>main}}
 *documented by [jsdoc-to-markdown](https://github.com/75lb/jsdoc-to-markdown)*.
 
 

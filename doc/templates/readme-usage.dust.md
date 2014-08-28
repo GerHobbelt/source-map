@@ -1,11 +1,3 @@
-# source-map-closest-match
-[![view on npm](http://img.shields.io/npm/v/source-map-closest-match.svg)](https://www.npmjs.org/package/source-map-closest-match)
-[![npm module downloads per month](http://img.shields.io/npm/dm/source-map-closest-match.svg)](https://www.npmjs.org/package/source-map-closest-match)
-[![Dependency Status](https://david-dm.org/Cellarise/source-map-closest-match.svg)](https://david-dm.org/Cellarise/source-map-closest-match)
-
-> Forked from mozilla/source-map. Parse and consume source maps using a closest match algorithm where exact mappings between generated and original are not found.
-
-
 # Source Map
 
 This is a library to generate and consume the source map format
@@ -80,9 +72,9 @@ This should spew a bunch of stuff to stdout, and create the following files:
     }));
     // { line: 2, column: 28 }
 
-    smc.eachMapping(function (m){
+    smc.eachMapping(function (m){~lb}~lb{~rb}
       // ...
-    });
+    {~rb});
 
 ### Generating a source map
 
@@ -455,63 +447,3 @@ shimmed in that environment. See `build/assert-shim.js`.)
 [format]: https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k/edit
 [feature]: https://wiki.mozilla.org/DevTools/Features/SourceMap
 [Dryice]: https://github.com/mozilla/dryice
-
-
-
-# API
-#Index
-
-**Functions**
-
-* [encode()](#encode)
-* [decode()](#decode)
-* [encode()](#encode)
-* [decode()](#decode)
-* [search(aNeedle, aHaystack, aCompare)](#search)
- 
-<a name="encode"></a>
-#encode()
-Returns the base 64 VLQ encoded value.
-
-<a name="decode"></a>
-#decode()
-Decodes the next base 64 VLQ value from the given string and returns the
-value and the rest of the string.
-
-<a name="encode"></a>
-#encode()
-Encode an integer in the range of 0 to 63 to a single base 64 digit.
-
-<a name="decode"></a>
-#decode()
-Decode a single base 64 digit to an integer.
-
-<a name="search"></a>
-#search(aNeedle, aHaystack, aCompare)
-This is an implementation of binary search which will always try and return
-the next lowest value checked if there is no exact hit. This is because
-mappings between original and generated line/col pairs are single points,
-and there is an implicit region between each of them, so a miss just means
-that you aren't on the very start of a region.
-
-**Params**
-
-- aNeedle  - The element you are looking for.  
-- aHaystack  - The array that is being searched.  
-- aCompare  - A function which takes the needle and an element in the
-    array and returns -1, 0, or 1 depending on whether the needle is less
-    than, equal to, or greater than the element, respectively.  
-
-
-*documented by [jsdoc-to-markdown](https://github.com/75lb/jsdoc-to-markdown)*.
-
-
-# License
-
-MIT License (MIT)
-
-Copyright (c) 2014 Nick Fitzgerald &lt;nfitzgerald@mozilla.com&gt;
-
-## Dependencies
-[amdefine@0.1.0](&quot;https://github.com/jrburke/amdefine&quot;) - [&quot;BSD&quot;,&quot;MIT&quot;], [source-map-closest-match@0.0.0](&quot;https://github.com/Cellarise/source-map-closest-match&quot;) - &quot;MIT License (MIT)&quot;, 
-*documented by [npm-licenses](http://github.com/AceMetrix/npm-license.git)*.
