@@ -9,6 +9,7 @@ module.exports = [
   // Plain build.
   {
     entry: "./source-map.js",
+    mode: "development",
     output: {
       path: distDir,
       filename: "source-map.js",
@@ -20,6 +21,7 @@ module.exports = [
   // Debug build.
   {
     entry: "./source-map.js",
+    mode: "development",
     output: {
       path: distDir,
       filename: "source-map.debug.js",
@@ -32,17 +34,13 @@ module.exports = [
   // Minified build.
   {
     entry: "./source-map.js",
+    mode: "production",
     output: {
       path: distDir,
       filename: "source-map.min.js",
       library: "sourceMap",
       libraryTarget: "umd",
     },
-    plugins: [
-      new webpack.optimize.UglifyJsPlugin({
-        sourceMap: true
-      })
-    ],
     devtool: "#source-map"
   }
 ];
@@ -71,13 +69,14 @@ function run_test() {
 testFiles.forEach(function (file) {
   module.exports.push({
     entry: path.join(testsDir, file),
+    mode: "development",
     output: {
       path: path.join(distDir, "test"),
       filename: file.replace(/\-/g, "_"),
       library: "SOURCE_MAP_TEST_MODULE"
     },
     plugins: [
-      new BannerPlugin(run_test.toString() + "\n\n", { raw: true })
+      new BannerPlugin(run_test.toString() + "\n\n")
     ],
     devtool: "#inline-source-map"
   });
