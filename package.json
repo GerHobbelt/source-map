@@ -1,5 +1,5 @@
 {
-  "name": "source-map",
+  "name": "@gerhobbelt/source-map",
   "description": "Generates and consumes source maps",
   "version": "0.7.3-3",
   "homepage": "https://github.com/mozilla/source-map",
@@ -62,6 +62,7 @@
     "lint": "eslint *.js lib/ test/",
     "prebuild": "npm run lint",
     "build": "webpack-cli --color",
+    "pub": "npm publish --access public",
     "pretest": "npm run build",
     "test": "node test/run-tests.js",
     "precoverage": "npm run build",
