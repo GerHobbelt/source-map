@@ -1,5 +1,5 @@
 {
-  "name": "source-map",
+  "name": "@gerhobbelt/source-map",
   "description": "Generates and consumes source maps",
   "version": "0.6.2-3",
   "homepage": "https://github.com/mozilla/source-map",
@@ -63,6 +63,7 @@
   "scripts": {
     "test": "npm run build && node test/run-tests.js",
     "build": "webpack-cli --color",
+    "pub": "npm publish --access public",
     "toc": "bash -c \"doctoc --title '## Table of Contents' README.md && doctoc --title '## Table of Contents' CONTRIBUTING.md\""
   },
   "devDependencies": {
