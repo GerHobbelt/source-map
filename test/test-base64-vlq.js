@@ -520,10 +520,14 @@ const vlqs = [
 exports["test normal encoding and decoding"] = function(assert) {
   for (let i = 0; i < vlqs.length; i++) {
     const str = base64VLQ.encode(vlqs[i].number);
+    const result = {};
+    base64VLQ.decode(str, 0, result);
     assert.equal(
       vlqs[i].encoded,
       str,
       `number ${vlqs[i].number} should encode correctly: ${vlqs[i].encoded} == ${str}`
     );
+    assert.equal(result.value, vlqs[i].number);
+    assert.equal(result.rest, str.length);
   }
 };
