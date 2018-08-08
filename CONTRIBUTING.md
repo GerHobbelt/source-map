@@ -64,7 +64,7 @@ force push to the remote branch to update the pull request.
 
 ## Running Tests
 
-The test suite is written for node.js. Install node.js `0.10.0` or greater and
+The test suite is written for node.js. Install node.js `9` or greater and
 then run the tests with `npm test`:
 
 ```shell
@@ -73,7 +73,7 @@ $ npm test
 > node test/run-tests.js
 
 
-119 / 119 tests passed.
+137 / 137 tests passed.
 ```
 
 ## Writing New Tests
