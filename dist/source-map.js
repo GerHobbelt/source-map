@@ -1570,15 +1570,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var sourceRoot = this.sourceRoot;
 	    mappings.map(function (mapping) {
-	      var source = mapping.source === null ? null : this._sources.at(mapping.source);
-	      source = util.computeSourceURL(sourceRoot, source, this._sourceMapURL);
+	      var source = mapping.source == null ? null : this._sources.at(mapping.source);
+	      source = source == null ? source : util.computeSourceURL(sourceRoot, source, this._sourceMapURL);
 	      return {
 	        source: source,
 	        generatedLine: mapping.generatedLine,
 	        generatedColumn: mapping.generatedColumn,
 	        originalLine: mapping.originalLine,
 	        originalColumn: mapping.originalColumn,
-	        name: mapping.name === null ? null : this._names.at(mapping.name)
+	        name: mapping.name == null ? null : this._names.at(mapping.name)
 	      };
 	    }, this).forEach(aCallback, context);
 	  };
@@ -2090,12 +2090,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      if (mapping.generatedLine === needle.generatedLine) {
 	        var source = util.getArg(mapping, 'source', null);
-	        if (source !== null) {
+	        if (source != null) {
 	          source = this._sources.at(source);
 	          source = util.computeSourceURL(this.sourceRoot, source, this._sourceMapURL);
 	        }
 	        var name = util.getArg(mapping, 'name', null);
-	        if (name !== null) {
+	        if (name != null) {
 	          name = this._names.at(name);
 	        }
 	        return {
@@ -2406,7 +2406,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return cmp;
 	        }
 
-	        return (needle.generatedColumn -
+	        return ((needle.generatedColumn + 1) -
 	                section.generatedOffset.generatedColumn);
 	      });
 	    var section = this._sections[sectionIndex];
@@ -2479,7 +2479,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * and an object is returned with the following properties:
 	 *
 	 *   - line: The line number in the generated source, or null.  The
-	 *     line number is 1-based. 
+	 *     line number is 1-based.
 	 *   - column: The column number in the generated source, or null.
 	 *     The column number is 0-based.
 	 */
@@ -2528,13 +2528,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	      for (var j = 0; j < sectionMappings.length; j++) {
 	        var mapping = sectionMappings[j];
 
-	        var source = section.consumer._sources.at(mapping.source);
-	        source = util.computeSourceURL(section.consumer.sourceRoot, source, this._sourceMapURL);
-	        this._sources.add(source);
-	        source = this._sources.indexOf(source);
+	        var source = null;
+	        if (mapping.source != null) {
+	          source = section.consumer._sources.at(mapping.source);
+	          source = util.computeSourceURL(section.consumer.sourceRoot, source, this._sourceMapURL);
+	          this._sources.add(source);
+	          source = this._sources.indexOf(source);
+	        }
 
 	        var name = null;
-	        if (mapping.name) {
+	        if (mapping.name != null) {
 	          name = section.consumer._names.at(mapping.name);
 	          this._names.add(name);
 	          name = this._names.indexOf(name);
@@ -2566,6 +2569,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    quickSort(this.__generatedMappings, util.compareByGeneratedPositionsDeflated);
 	    quickSort(this.__originalMappings, util.compareByOriginalPositions);
+	  };
+
+	IndexedSourceMapConsumer.prototype.computeColumnSpans =
+	  function IndexedSourceMapConsumer_computeColumnSpans() {
+	    for (var i = 0; i < this._sections.length; i++) {
+	      this._sections[i].consumer.computeColumnSpans();
+	    }
 	  };
 
 	exports.IndexedSourceMapConsumer = IndexedSourceMapConsumer;

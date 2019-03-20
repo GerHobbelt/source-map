@@ -294,6 +294,34 @@ exports['test eachMapping for indexed source maps'] = function(assert) {
   });
 };
 
+exports["test eachMapping for indexed source maps with column offsets"] = function(assert) {
+  var map = new SourceMapConsumer(util.indexedTestMapColumnOffset);
+  map.computeColumnSpans();
+  var previousLine = -Infinity;
+  var previousColumn = -Infinity;
+  var previousLastColumn = -Infinity;
+
+  map.eachMapping(function(mapping) {
+    assert.ok(mapping.generatedLine >= previousLine);
+
+    if (mapping.source) {
+      assert.equal(mapping.source.indexOf(util.testMap.sourceRoot), 0);
+    }
+
+    if (mapping.generatedLine === previousLine) {
+      assert.ok(mapping.generatedColumn >= previousColumn);
+      if (typeof previousLastColumn === "number") {
+        assert.ok(mapping.generatedColumn > previousLastColumn);
+      }
+      previousColumn = mapping.generatedColumn;
+      previousLastColumn = mapping.lastGeneratedColumn;
+    } else {
+      previousLine = mapping.generatedLine;
+      previousColumn = -Infinity;
+      previousLastColumn = -Infinity;
+    }
+  });
+};
 
 exports['test iterating over mappings in a different order'] = function (assert) {
   var map = new SourceMapConsumer(util.testMap);
@@ -552,6 +580,52 @@ exports['test sourceRoot + generatedPositionFor for path above the root'] = func
 
   assert.equal(pos.line, 2);
   assert.equal(pos.column, 2);
+};
+
+exports["test index map + originalPositionFor"] = function(assert) {
+  var map = new SourceMapConsumer(
+    util.indexedTestMapWithMappingsAtSectionStart
+  );
+
+  var pos = map.originalPositionFor({
+    line: 1,
+    column: 0
+  });
+
+  assert.equal(pos.line, 1);
+  assert.equal(pos.column, 0);
+  assert.equal(pos.source, "foo.js");
+  assert.equal(pos.name, "first");
+
+  pos = map.originalPositionFor({
+    line: 1,
+    column: 1
+  });
+
+  assert.equal(pos.line, 2);
+  assert.equal(pos.column, 1);
+  assert.equal(pos.source, "bar.js");
+  assert.equal(pos.name, "second");
+
+  pos = map.originalPositionFor({
+    line: 1,
+    column: 2
+  });
+
+  assert.equal(pos.line, 1);
+  assert.equal(pos.column, 0);
+  assert.equal(pos.source, "baz.js");
+  assert.equal(pos.name, "third");
+
+  pos = map.originalPositionFor({
+    line: 1,
+    column: 3
+  });
+
+  assert.equal(pos.line, 2);
+  assert.equal(pos.column, 1);
+  assert.equal(pos.source, "quux.js");
+  assert.equal(pos.name, "fourth");
 };
 
 exports['test allGeneratedPositionsFor for line'] = function (assert) {
@@ -1246,4 +1320,92 @@ exports['test absolute sourceURL resolution with sourceMapURL'] = function (asse
 
   assert.equal(consumer.sources.length, 1);
   assert.equal(consumer.sources[0], 'http://www.example.com/src/something.js');
+};
+
+exports['test mapping without section in an indexed map'] = function (assert) {
+  var map = {
+    "version": 3,
+    "sections": [
+      {
+        "offset": {"line": 0, "column": 0},
+        "map": {
+          "version": 3,
+          "names": [],
+          "sources": [],
+          "mappings": "A"
+        }
+      }
+    ]
+  };
+  var consumer = new SourceMapConsumer(map);
+  var mappings = [];
+  consumer.eachMapping(function (mapping) {
+    mappings.push(mapping);
+  });
+
+  assert.equal(mappings.length, 1);
+  assert.equal(mappings[0].source, null);
+  assert.equal(mappings[0].generatedLine, 1);
+  assert.equal(mappings[0].generatedColumn, 0);
+  assert.equal(mappings[0].originalLine, null);
+  assert.equal(mappings[0].originalColumn, null);
+  assert.equal(mappings[0].name, null);
+};
+
+exports['test mapping without name in an indexed map'] = function (assert) {
+  var map = {
+    "version": 3,
+    "sections": [
+      {
+        "offset": {"line": 0, "column": 0},
+        "map": {
+          "version": 3,
+          "names": [],
+          "sources": ["foo.js"],
+          "mappings": "AAAA"
+        }
+      }
+    ]
+  };
+  var consumer = new SourceMapConsumer(map);
+  var mappings = [];
+  consumer.eachMapping(function (mapping) {
+    mappings.push(mapping);
+  });
+
+  assert.equal(mappings.length, 1);
+  assert.equal(mappings[0].generatedLine, 1);
+  assert.equal(mappings[0].generatedColumn, 0);
+  assert.equal(mappings[0].originalLine, 1);
+  assert.equal(mappings[0].originalColumn, 0);
+  assert.equal(mappings[0].name, null);
+};
+
+exports['test mapping with name=0 in an indexed map'] = function (assert) {
+  var map = {
+    "version": 3,
+    "sections": [
+      {
+        "offset": {"line": 0, "column": 0},
+        "map": {
+          "version": 3,
+          "names": ["first"],
+          "sources": ["foo.js"],
+          "mappings": "AAAAA"
+        }
+      }
+    ]
+  };
+  var consumer = new SourceMapConsumer(map);
+  var mappings = [];
+  consumer.eachMapping(function (mapping) {
+    mappings.push(mapping);
+  });
+
+  assert.equal(mappings.length, 1);
+  assert.equal(mappings[0].generatedLine, 1);
+  assert.equal(mappings[0].generatedColumn, 0);
+  assert.equal(mappings[0].originalLine, 1);
+  assert.equal(mappings[0].originalColumn, 0);
+  assert.equal(mappings[0].name, "first");
 };
