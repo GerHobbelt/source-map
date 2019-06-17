@@ -304,8 +304,10 @@ exports["test eachMapping"] = async function(assert) {
 
 exports["test eachMapping for indexed source maps"] = async function(assert) {
   const map = await new SourceMapConsumer(util.indexedTestMap);
+  map.computeColumnSpans();
   let previousLine = -Infinity;
   let previousColumn = -Infinity;
+  let previousLastColumn = -Infinity;
 
   map.eachMapping(function(mapping) {
     assert.ok(mapping.generatedLine >= previousLine);
@@ -316,10 +318,46 @@ exports["test eachMapping for indexed source maps"] = async function(assert) {
 
     if (mapping.generatedLine === previousLine) {
       assert.ok(mapping.generatedColumn >= previousColumn);
+      if (typeof previousLastColumn === "number") {
+        assert.ok(mapping.generatedColumn > previousLastColumn);
+      }
       previousColumn = mapping.generatedColumn;
+      previousLastColumn = mapping.lastGeneratedColumn;
     } else {
       previousLine = mapping.generatedLine;
       previousColumn = -Infinity;
+      previousLastColumn = -Infinity;
+    }
+  });
+
+  map.destroy();
+};
+
+exports["test eachMapping for indexed source maps with column offsets"] = async function(assert) {
+  const map = await new SourceMapConsumer(util.indexedTestMapColumnOffset);
+  map.computeColumnSpans();
+  let previousLine = -Infinity;
+  let previousColumn = -Infinity;
+  let previousLastColumn = -Infinity;
+
+  map.eachMapping(function(mapping) {
+    assert.ok(mapping.generatedLine >= previousLine);
+
+    if (mapping.source) {
+      assert.equal(mapping.source.indexOf(util.testMap.sourceRoot), 0);
+    }
+
+    if (mapping.generatedLine === previousLine) {
+      assert.ok(mapping.generatedColumn >= previousColumn);
+      if (typeof previousLastColumn === "number") {
+        assert.ok(mapping.generatedColumn > previousLastColumn);
+      }
+      previousColumn = mapping.generatedColumn;
+      previousLastColumn = mapping.lastGeneratedColumn;
+    } else {
+      previousLine = mapping.generatedLine;
+      previousColumn = -Infinity;
+      previousLastColumn = -Infinity;
     }
   });
 
@@ -607,6 +645,53 @@ exports["test sourceRoot + generatedPositionFor for path above the root"] = asyn
   map.destroy();
 };
 
+exports["test index map + generatedPositionFor"] = async function(assert) {
+  const map = await new SourceMapConsumer(util.indexedTestMapColumnOffset, "http://example.com/");
+  map.computeColumnSpans();
+
+  let pos = map.generatedPositionFor({
+    line: 1,
+    column: 11,
+    source: "one.js"
+  });
+
+  assert.equal(pos.line, 1);
+  assert.equal(pos.column, 9);
+  assert.equal(pos.lastColumn, 17);
+
+  pos = map.generatedPositionFor({
+    line: 2,
+    column: 3,
+    source: "one.js"
+  });
+
+  assert.equal(pos.line, 1);
+  assert.equal(pos.column, 21);
+  assert.equal(pos.lastColumn, 27);
+
+  pos = map.generatedPositionFor({
+    line: 1,
+    column: 11,
+    source: "two.js"
+  });
+
+  assert.equal(pos.line, 1);
+  assert.equal(pos.column, 59);
+  assert.equal(pos.lastColumn, 67);
+
+  pos = map.generatedPositionFor({
+    line: 2,
+    column: 3,
+    source: "two.js"
+  });
+
+  assert.equal(pos.line, 1);
+  assert.equal(pos.column, 71);
+  assert.equal(pos.lastColumn, 77);
+
+  map.destroy();
+};
+
 exports["test allGeneratedPositionsFor for line"] = async function(assert) {
   let map = new SourceMapGenerator({
     file: "generated.js"
@@ -806,6 +891,69 @@ exports["test allGeneratedPositionsFor for column on different line fuzzy"] = as
   map.destroy();
 };
 
+exports["test allGeneratedPositionsFor for index map"] = async function(assert) {
+  const map = await new SourceMapConsumer(util.indexedTestMapColumnOffset);
+  map.computeColumnSpans();
+
+  let mappings = map.allGeneratedPositionsFor({
+    line: 2,
+    column: 3,
+    source: "one.js"
+  });
+
+  assert.deepEqual(mappings, [
+    {
+      line: 1,
+      column: 21,
+      lastColumn: 27,
+    }
+  ]);
+
+  mappings = map.allGeneratedPositionsFor({
+    line: 2,
+    column: 14,
+    source: "one.js"
+  });
+
+  assert.deepEqual(mappings, [
+    {
+      line: 1,
+      column: 32,
+      lastColumn: 49
+    }
+  ]);
+
+  mappings = map.allGeneratedPositionsFor({
+    line: 2,
+    column: 3,
+    source: "two.js"
+  });
+
+  assert.deepEqual(mappings, [
+    {
+      line: 1,
+      column: 71,
+      lastColumn: 77,
+    }
+  ]);
+
+  mappings = map.allGeneratedPositionsFor({
+    line: 2,
+    column: 10,
+    source: "two.js"
+  });
+
+  assert.deepEqual(mappings, [
+    {
+      line: 1,
+      column: 78,
+      lastColumn: Infinity,
+    }
+  ]);
+
+  map.destroy();
+};
+
 exports["test computeColumnSpans"] = async function(assert) {
   let map = new SourceMapGenerator({
     file: "generated.js"
@@ -897,26 +1045,6 @@ exports["test sourceRoot + originalPositionFor"] = async function(assert) {
   assert.equal(pos.source, "foo/bar/bang.coffee");
   assert.equal(pos.line, 1);
   assert.equal(pos.column, 1);
-
-  map.destroy();
-};
-
-exports["test github issue #56"] = async function(assert) {
-  let map = new SourceMapGenerator({
-    sourceRoot: "http://",
-    file: "www.example.com/foo.js"
-  });
-  map.addMapping({
-    original: { line: 1, column: 1 },
-    generated: { line: 2, column: 2 },
-    source: "www.example.com/original.js"
-  });
-
-  map = await new SourceMapConsumer(map.toString());
-
-  const sources = map.sources;
-  assert.equal(sources.length, 1);
-  assert.equal(sources[0], "http://www.example.com/original.js");
 
   map.destroy();
 };
@@ -1276,9 +1404,10 @@ exports["test non-normalized sourceRoot (from issue #227)"] = async function(ass
     sourceRoot: "./src/",
     sourcesContent: [ 'var name = "Mark"\n' ]
   });
-  assert.equal(consumer.sourceRoot, "src/", "sourceRoot was normalized");
-  // Before the fix, this threw an exception.
-  consumer.sourceContentFor(consumer.sources[0]);
+  assert.doesNotThrow(() => {
+    // Before the fix, this threw an exception.
+    consumer.sourceContentFor(consumer.sources[0]);
+  });
 
   consumer.destroy();
 };
@@ -1295,7 +1424,7 @@ exports["test webpack URL resolution"] = async function(assert) {
   const consumer = await new SourceMapConsumer(map);
 
   assert.equal(consumer.sources.length, 1);
-  assert.equal(consumer.sources[0], "webpack:///webpack/bootstrap 67e184f9679733298d44");
+  assert.equal(consumer.sources[0], "webpack:///webpack/bootstrap%2067e184f9679733298d44");
 
   consumer.destroy();
 };
@@ -1312,7 +1441,7 @@ exports["test webpack URL resolution with sourceMapURL"] = async function(assert
   const consumer = await new SourceMapConsumer(map, "http://www.example.com/q.js.map");
 
   assert.equal(consumer.sources.length, 1);
-  assert.equal(consumer.sources[0], "webpack:///webpack/bootstrap 67e184f9679733298d44");
+  assert.equal(consumer.sources[0], "webpack:///webpack/bootstrap%2067e184f9679733298d44");
 
   consumer.destroy();
 };
