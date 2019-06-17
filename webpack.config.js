@@ -6,6 +6,9 @@ module.exports = [
   {
     entry: "./source-map.js",
     mode: "production",
+    optimization: {
+      minimize: false
+    },
     output: {
       path: distDir,
       filename: "source-map.js",
