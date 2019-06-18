@@ -805,10 +805,10 @@ exports["test index map + generatedPositionFor"] = async function(assert) {
 };
 
 exports["test index map + originalPositionFor"] = async function(assert) {
-  var map = await new SourceMapConsumer(util.indexedTestMapWithMappingsAtSectionStart);
+  const map = await new SourceMapConsumer(util.indexedTestMapWithMappingsAtSectionStart);
   assert.ok(map instanceof IndexedSourceMapConsumer);
 
-  var pos = map.originalPositionFor({
+  let pos = map.originalPositionFor({
     line: 1,
     column: 0
   });
