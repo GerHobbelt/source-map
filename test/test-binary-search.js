@@ -37,7 +37,7 @@ exports["test too high with lub bias"] = function(assert) {
   const needle = 30;
   const haystack = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20];
 
-  assert.doesNotThrow(function() {
+  assert.doesNotThrow(function () {
     binarySearch.search(needle, haystack, numberCompare);
   });
 
@@ -49,7 +49,7 @@ exports["test too low with lub bias"] = function(assert) {
   const needle = 1;
   const haystack = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20];
 
-  assert.doesNotThrow(function() {
+  assert.doesNotThrow(function () {
     binarySearch.search(needle, haystack, numberCompare);
   });
 
