@@ -64,11 +64,13 @@
   "scripts": {
     "test": "npm run build && node test/run-tests.js",
     "build": "webpack-cli --color",
+    "prettier": "prettier --write  *.{js,ts,json,md} lib/*.js test/*.js bench/bench*",
     "pub": "npm publish --access public",
     "toc": "bash -c \"doctoc --title '## Table of Contents' README.md && doctoc --title '## Table of Contents' CONTRIBUTING.md\""
   },
   "devDependencies": {
     "doctoc": "1.4.0",
+    "prettier": "1.18.2",
     "webpack": "4.34.0",
     "webpack-cli": "3.3.4"
   },
