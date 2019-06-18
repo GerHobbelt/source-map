@@ -40,11 +40,12 @@
     "Gilad Peleg <giladp007@gmail.com>",
     "djchie <djchie.dev@gmail.com>",
     "Gary Ye <garysye@gmail.com>",
-    "Nicolas Lalevée <nicolas.lalevee@hibnet.org>"
+    "Nicolas Lalevée <nicolas.lalevee@hibnet.org>",
+    "Moti Zilberman <motiz88@gmail.com>"
   ],
   "repository": {
     "type": "git",
-    "url": "http://github.com/mozilla/source-map.git"
+    "url": "http://github.com/motiz88/source-map.git"
   },
   "main": "./source-map.js",
   "files": [

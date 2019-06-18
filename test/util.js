@@ -210,6 +210,84 @@ exports.indexedTestMapDifferentSourceRoots = {
     }
   ]
 };
+exports.indexedTestMapColumnOffset = {
+  version: 3,
+  file: "min.js",
+  sections: [
+    {
+      offset: {
+        line: 0,
+        column: 0
+      },
+      map: {
+        version: 3,
+        sources: [
+          "one.js"
+        ],
+        sourcesContent: [
+          " ONE.foo = function (bar) {\n" +
+          "   return baz(bar);\n" +
+          " };",
+        ],
+        names: [
+          "bar",
+          "baz"
+        ],
+        mappings: "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOC,IAAID",
+        file: "min.js",
+        sourceRoot: "/the/root"
+      }
+    },
+    {
+      offset: {
+        line: 0,
+        // Previous section's last generated mapping is [32, Infinity), so
+        // we're placing this a bit after that.
+        column: 50
+      },
+      map: {
+        version: 3,
+        sources: [
+          "two.js"
+        ],
+        sourcesContent: [
+          " TWO.inc = function (n) {\n" +
+          "   return n + 1;\n" +
+          " };"
+        ],
+        names: [
+          "n"
+        ],
+        mappings: "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOA",
+        file: "min.js",
+        sourceRoot: "/the/root"
+      }
+    }
+  ]
+};
+exports.indexedTestMapWithMappingsAtSectionStart = {
+  version: 3,
+  sections: [
+    {
+      offset: {"line": 0, "column": 0},
+      map: {
+        version: 3,
+        names: ["first", "second"],
+        sources: ["foo.js", "bar.js"],
+        mappings: "AAAAA,CCCCC"
+      }
+    },
+    {
+      offset: {"line": 0, "column": 2},
+      map: {
+        version: 3,
+        names: ["third", "fourth"],
+        sources: ["baz.js", "quux.js"],
+        mappings: "AAAAA,CCCCC"
+      }
+    }
+  ]
+};
 exports.testMapWithSourcesContent = {
   version: 3,
   file: 'min.js',
