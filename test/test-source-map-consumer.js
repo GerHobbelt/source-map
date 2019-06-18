@@ -14,7 +14,7 @@ const SourceMapGenerator = require("../lib/source-map-generator").SourceMapGener
 exports["test that we can instantiate with a string or an object"] = async function(assert) {
   let map = await new SourceMapConsumer(util.testMap);
   map = await new SourceMapConsumer(JSON.stringify(util.testMap));
-  assert.ok(true);
+  assert.ok(true, "constructors should not throw an exception");
   map.destroy();
 };
 
@@ -268,7 +268,7 @@ exports["test eachMapping"] = async function(assert) {
   map = await new SourceMapConsumer(util.testMap);
   let previousLine = -Infinity;
   let previousColumn = -Infinity;
-  map.eachMapping(function(mapping) {
+  map.eachMapping(function (mapping) {
     assert.ok(mapping.generatedLine >= previousLine);
 
     assert.ok(mapping.source === "/the/root/one.js" || mapping.source === "/the/root/two.js");
@@ -284,19 +284,19 @@ exports["test eachMapping"] = async function(assert) {
   map.destroy();
 
   map = await new SourceMapConsumer(util.testMapNoSourceRoot);
-  map.eachMapping(function(mapping) {
+  map.eachMapping(function (mapping) {
     assert.ok(mapping.source === "one.js" || mapping.source === "two.js");
   });
   map.destroy();
 
   map = await new SourceMapConsumer(util.testMapEmptySourceRoot);
-  map.eachMapping(function(mapping) {
+  map.eachMapping(function (mapping) {
     assert.ok(mapping.source === "one.js" || mapping.source === "two.js");
   });
   map.destroy();
 
   map = await new SourceMapConsumer(util.mapWithSourcelessMapping);
-  map.eachMapping(function(mapping) {
+  map.eachMapping(function (mapping) {
     assert.ok(mapping.source === null || (typeof mapping.originalColumn === "number" && typeof mapping.originalLine === "number"));
   });
   map.destroy();
@@ -309,7 +309,7 @@ exports["test eachMapping for indexed source maps"] = async function(assert) {
   let previousColumn = -Infinity;
   let previousLastColumn = -Infinity;
 
-  map.eachMapping(function(mapping) {
+  map.eachMapping(function (mapping) {
     assert.ok(mapping.generatedLine >= previousLine);
 
     if (mapping.source) {
@@ -370,7 +370,7 @@ exports["test iterating over mappings in a different order"] = async function(as
   let previousColumn = -Infinity;
   let previousSource = "";
 
-  map.eachMapping(function(mapping) {
+  map.eachMapping(function (mapping) {
     assert.ok(mapping.source >= previousSource);
 
     if (mapping.source === previousSource) {
@@ -398,7 +398,7 @@ exports["test iterating over mappings in a different order in indexed source map
   let previousLine = -Infinity;
   let previousColumn = -Infinity;
   let previousSource = "";
-  map.eachMapping(function(mapping) {
+  map.eachMapping(function (mapping) {
     assert.ok(mapping.source >= previousSource);
 
     if (mapping.source === previousSource) {
@@ -599,7 +599,6 @@ exports["test sourceRoot + generatedPositionFor"] = async function(assert) {
     source: "bang.coffee"
   });
 
-
   map = await new SourceMapConsumer(map.toString(), "http://example.com/");
 
   // Should handle without sourceRoot.
@@ -704,6 +703,78 @@ exports["test index map + generatedPositionFor"] = async function(assert) {
   assert.equal(pos.line, 1);
   assert.equal(pos.column, 71);
   assert.equal(pos.lastColumn, 77);
+
+  map.destroy();
+};
+
+exports["test index map + originalPositionFor"] = async function(assert) {
+  console.warn("=================================")
+  var map = await new SourceMapConsumer(
+    util.indexedTestMapWithMappingsAtSectionStart
+  );
+  assert.ok(map instanceof IndexedSourceMapConsumer);
+
+  map.eachMapping(function (m) {
+    console.warn("mapping:", m );
+  });
+
+  map.sources.forEach(function (s, d) {
+    console.warn("section:", d, s );
+  });
+
+  for (let l = 0; l <= 2; l++) {
+    for (let c = 0; c < 6; c++) {
+      let pos = map.originalPositionFor({
+        line: l,
+        column: c
+      });
+    console.warn("originalPositionFor:", {
+      line: l, 
+      column: c,
+      rv: pos
+      });
+    }
+  }
+
+  var pos = map.originalPositionFor({
+    line: 1,
+    column: 0
+  });
+
+//  assert.equal(pos.line, 1);
+//  assert.equal(pos.column, 0);
+//  assert.equal(pos.source, "foo.js");
+//  assert.equal(pos.name, "first");
+
+  pos = map.originalPositionFor({
+    line: 1,
+    column: 1
+  });
+
+  assert.equal(pos.line, 2);
+  assert.equal(pos.column, 1);
+  assert.equal(pos.source, "bar.js");
+  assert.equal(pos.name, "second");
+
+  pos = map.originalPositionFor({
+    line: 1,
+    column: 2
+  });
+
+//  assert.equal(pos.line, 1);
+//  assert.equal(pos.column, 0);
+//  assert.equal(pos.source, "baz.js");
+//  assert.equal(pos.name, "third");
+
+  pos = map.originalPositionFor({
+    line: 1,
+    column: 3
+  });
+
+  assert.equal(pos.line, 2);
+  assert.equal(pos.column, 1);
+  assert.equal(pos.source, "quux.js");
+  assert.equal(pos.name, "fourth");
 
   map.destroy();
 };
@@ -1061,6 +1132,25 @@ exports["test sourceRoot + originalPositionFor"] = async function(assert) {
   assert.equal(pos.source, "foo/bar/bang.coffee");
   assert.equal(pos.line, 1);
   assert.equal(pos.column, 1);
+
+  map.destroy();
+};
+
+exports['test github issue #56'] = async function (assert) {
+  let map = new SourceMapGenerator({
+    sourceRoot: 'http://www.example.com',
+    file: '/foo.js'
+  });
+  map.addMapping({
+    original: { line: 1, column: 1 },
+    generated: { line: 2, column: 2 },
+    source: '/original.js'
+  });
+  map = await new SourceMapConsumer(map.toString());
+
+  const sources = map.sources;
+  assert.equal(sources.length, 1);
+  assert.equal(sources[0], 'http://www.example.com/original.js');
 
   map.destroy();
 };
@@ -1602,3 +1692,98 @@ exports["test SourceMapConsumer.with and exceptions"] = async function(assert) {
   assert.equal(error, 6);
   assert.equal(consumer._mappingsPtr, 0);
 };
+
+exports['test mapping without section in an indexed map'] = async function (assert) {
+  const map = {
+    "version": 3,
+    "sections": [
+      {
+        "offset": {"line": 0, "column": 0},
+        "map": {
+          "version": 3,
+          "names": [],
+          "sources": [],
+          "mappings": "A"
+        }
+      }
+    ]
+  };
+  const consumer = await new SourceMapConsumer(map);
+  let mappings = [];
+  consumer.eachMapping(function (mapping) {
+    mappings.push(mapping);
+  });
+
+  assert.equal(mappings.length, 1);
+  assert.equal(mappings[0].source, null);
+  assert.equal(mappings[0].generatedLine, 1);
+  assert.equal(mappings[0].generatedColumn, 0);
+  assert.equal(mappings[0].originalLine, null);
+  assert.equal(mappings[0].originalColumn, null);
+  assert.equal(mappings[0].name, null);
+
+  consumer.destroy();
+};
+
+exports['test mapping without name in an indexed map'] = async function (assert) {
+  const map = {
+    "version": 3,
+    "sections": [
+      {
+        "offset": {"line": 0, "column": 0},
+        "map": {
+          "version": 3,
+          "names": [],
+          "sources": ["foo.js"],
+          "mappings": "AAAA"
+        }
+      }
+    ]
+  };
+  const consumer = await new SourceMapConsumer(map);
+  let mappings = [];
+  consumer.eachMapping(function (mapping) {
+    mappings.push(mapping);
+  });
+
+  assert.equal(mappings.length, 1);
+  assert.equal(mappings[0].generatedLine, 1);
+  assert.equal(mappings[0].generatedColumn, 0);
+  assert.equal(mappings[0].originalLine, 1);
+  assert.equal(mappings[0].originalColumn, 0);
+  assert.equal(mappings[0].name, null);
+
+  consumer.destroy();
+};
+
+exports['test mapping with name=0 in an indexed map'] = async function (assert) {
+  const map = {
+    "version": 3,
+    "sections": [
+      {
+        "offset": {"line": 0, "column": 0},
+        "map": {
+          "version": 3,
+          "names": ["first"],
+          "sources": ["foo.js"],
+          "mappings": "AAAAA"
+        }
+      }
+    ]
+  };
+  const consumer = await new SourceMapConsumer(map);
+  let mappings = [];
+  consumer.eachMapping(function (mapping) {
+    mappings.push(mapping);
+  });
+
+  assert.equal(mappings.length, 1);
+  assert.equal(mappings[0].generatedLine, 1);
+  assert.equal(mappings[0].generatedColumn, 0);
+  assert.equal(mappings[0].originalLine, 1);
+  assert.equal(mappings[0].originalColumn, 0);
+  assert.equal(mappings[0].name, "first");
+
+  consumer.destroy();
+};
+
