@@ -67,7 +67,7 @@
   "scripts": {
     "lint": "eslint *.js lib/ test/",
     "prebuild": "npm run lint",
-    "prettier": "prettier --write  *.{js,ts,json,md} lib/*.js test/*.js bench/bench*",
+    "prettier": "prettier --write --print-width=120 *.{js,ts,json,md} lib/*.js test/*.js bench/bench*",
     "pub": "npm publish --access public",
     "test": "node test/run-tests.js",
     "coverage": "nyc node test/run-tests.js",

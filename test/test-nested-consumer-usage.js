@@ -6,8 +6,7 @@ const TS_MAP = {
   sourceRoot: "",
   sources: ["blah.tsx"],
   names: [],
-  mappings:
-    ";;AAKA;IACE,MAAM,CAAC,EAAC,MAAM,EAAE,SAAS,EAAC,CAAC;AAC7B,CAAC;AAFD,yBAEC",
+  mappings: ";;AAKA;IACE,MAAM,CAAC,EAAC,MAAM,EAAE,SAAS,EAAC,CAAC;AAC7B,CAAC;AAFD,yBAEC",
   sourcesContent: [
     "\ntype Cheese = {\n  readonly cheese: string\n}\n\nexport default function Cheese(): Cheese {\n  return {cheese: 'stilton'};\n}\n"
   ]
@@ -16,15 +15,7 @@ const TS_MAP = {
 const BABEL_MAP = {
   version: 3,
   sources: ["blah.tsx"],
-  names: [
-    "Object",
-    "defineProperty",
-    "exports",
-    "value",
-    "Cheese",
-    "cheese",
-    "default"
-  ],
+  names: ["Object", "defineProperty", "exports", "value", "Cheese", "cheese", "default"],
   mappings:
     "AAAA;;AACAA,OAAOC,cAAP,CAAsBC,OAAtB,EAA+B,YAA/B,EAA6C,EAAEC,OAAO,IAAT,EAA7C;AACA,SAASC,MAAT,GAAkB;AACd,WAAO,EAAEC,QAAQ,SAAV,EAAP;AACH;AACDH,QAAQI,OAAR,GAAkBF,MAAlB",
   sourcesContent: [
@@ -36,37 +27,28 @@ async function composeSourceMaps(tsMap, babelMap, tsFileName) {
   const tsConsumer = await new SourceMapConsumer(tsMap);
   const babelConsumer = await new SourceMapConsumer(babelMap);
   const map = new SourceMapGenerator();
-  babelConsumer.eachMapping(
-    ({
-      source,
-      generatedLine,
-      generatedColumn,
-      originalLine,
-      originalColumn,
-      name
-    }) => {
-      if (originalLine) {
-        const original = tsConsumer.originalPositionFor({
-          line: originalLine,
-          column: originalColumn
+  babelConsumer.eachMapping(({ source, generatedLine, generatedColumn, originalLine, originalColumn, name }) => {
+    if (originalLine) {
+      const original = tsConsumer.originalPositionFor({
+        line: originalLine,
+        column: originalColumn
+      });
+      if (original.line) {
+        map.addMapping({
+          generated: {
+            line: generatedLine,
+            column: generatedColumn
+          },
+          original: {
+            line: original.line,
+            column: original.column
+          },
+          source: tsFileName,
+          name
         });
-        if (original.line) {
-          map.addMapping({
-            generated: {
-              line: generatedLine,
-              column: generatedColumn
-            },
-            original: {
-              line: original.line,
-              column: original.column
-            },
-            source: tsFileName,
-            name
-          });
-        }
       }
     }
-  );
+  });
   return map.toJSON();
 }
 

@@ -26,25 +26,21 @@ const util = require("../lib/util");
 //
 //   ONE.foo=function(a){return baz(a);};
 //   TWO.inc=function(a){return a+1;};
-exports.testGeneratedCode =
-  " ONE.foo=function(a){return baz(a);};\n" +
-  " TWO.inc=function(a){return a+1;};";
+exports.testGeneratedCode = " ONE.foo=function(a){return baz(a);};\n" + " TWO.inc=function(a){return a+1;};";
 exports.testMap = {
   version: 3,
   file: "min.js",
   names: ["bar", "baz", "n"],
   sources: ["one.js", "two.js"],
   sourceRoot: "/the/root",
-  mappings:
-    "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOC,IAAID;CCDb,IAAI,IAAM,SAAUE,GAClB,OAAOA"
+  mappings: "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOC,IAAID;CCDb,IAAI,IAAM,SAAUE,GAClB,OAAOA"
 };
 exports.testMapNoSourceRoot = {
   version: 3,
   file: "min.js",
   names: ["bar", "baz", "n"],
   sources: ["one.js", "two.js"],
-  mappings:
-    "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOC,IAAID;CCDb,IAAI,IAAM,SAAUE,GAClB,OAAOA"
+  mappings: "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOC,IAAID;CCDb,IAAI,IAAM,SAAUE,GAClB,OAAOA"
 };
 exports.testMapEmptySourceRoot = {
   version: 3,
@@ -52,8 +48,7 @@ exports.testMapEmptySourceRoot = {
   names: ["bar", "baz", "n"],
   sources: ["one.js", "two.js"],
   sourceRoot: "",
-  mappings:
-    "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOC,IAAID;CCDb,IAAI,IAAM,SAAUE,GAClB,OAAOA"
+  mappings: "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOC,IAAID;CCDb,IAAI,IAAM,SAAUE,GAClB,OAAOA"
 };
 exports.testMapSingleSource = {
   version: 3,
@@ -111,9 +106,7 @@ exports.indexedTestMap = {
       map: {
         version: 3,
         sources: ["one.js"],
-        sourcesContent: [
-          " ONE.foo = function (bar) {\n" + "   return baz(bar);\n" + " };"
-        ],
+        sourcesContent: [" ONE.foo = function (bar) {\n" + "   return baz(bar);\n" + " };"],
         names: ["bar", "baz"],
         mappings: "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOC,IAAID",
         file: "min.js",
@@ -128,9 +121,7 @@ exports.indexedTestMap = {
       map: {
         version: 3,
         sources: ["two.js"],
-        sourcesContent: [
-          " TWO.inc = function (n) {\n" + "   return n + 1;\n" + " };"
-        ],
+        sourcesContent: [" TWO.inc = function (n) {\n" + "   return n + 1;\n" + " };"],
         names: ["n"],
         mappings: "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOA",
         file: "min.js",
@@ -151,9 +142,7 @@ exports.indexedTestMapDifferentSourceRoots = {
       map: {
         version: 3,
         sources: ["one.js"],
-        sourcesContent: [
-          " ONE.foo = function (bar) {\n" + "   return baz(bar);\n" + " };"
-        ],
+        sourcesContent: [" ONE.foo = function (bar) {\n" + "   return baz(bar);\n" + " };"],
         names: ["bar", "baz"],
         mappings: "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOC,IAAID",
         file: "min.js",
@@ -168,9 +157,7 @@ exports.indexedTestMapDifferentSourceRoots = {
       map: {
         version: 3,
         sources: ["two.js"],
-        sourcesContent: [
-          " TWO.inc = function (n) {\n" + "   return n + 1;\n" + " };"
-        ],
+        sourcesContent: [" TWO.inc = function (n) {\n" + "   return n + 1;\n" + " };"],
         names: ["n"],
         mappings: "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOA",
         file: "min.js",
@@ -191,9 +178,7 @@ exports.indexedTestMapColumnOffset = {
       map: {
         version: 3,
         sources: ["one.js"],
-        sourcesContent: [
-          " ONE.foo = function (bar) {\n" + "   return baz(bar);\n" + " };"
-        ],
+        sourcesContent: [" ONE.foo = function (bar) {\n" + "   return baz(bar);\n" + " };"],
         names: ["bar", "baz"],
         mappings: "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOC,IAAID",
         file: "min.js",
@@ -210,9 +195,7 @@ exports.indexedTestMapColumnOffset = {
       map: {
         version: 3,
         sources: ["two.js"],
-        sourcesContent: [
-          " TWO.inc = function (n) {\n" + "   return n + 1;\n" + " };"
-        ],
+        sourcesContent: [" TWO.inc = function (n) {\n" + "   return n + 1;\n" + " };"],
         names: ["n"],
         mappings: "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOA",
         file: "min.js",
@@ -254,8 +237,7 @@ exports.testMapWithSourcesContent = {
     " TWO.inc = function (n) {\n" + "   return n + 1;\n" + " };"
   ],
   sourceRoot: "/the/root",
-  mappings:
-    "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOC,IAAID;CCDb,IAAI,IAAM,SAAUE,GAClB,OAAOA"
+  mappings: "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOC,IAAID;CCDb,IAAI,IAAM,SAAUE,GAClB,OAAOA"
 };
 exports.testMapRelativeSources = {
   version: 3,
@@ -267,8 +249,7 @@ exports.testMapRelativeSources = {
     " TWO.inc = function (n) {\n" + "   return n + 1;\n" + " };"
   ],
   sourceRoot: "/the/root",
-  mappings:
-    "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOC,IAAID;CCDb,IAAI,IAAM,SAAUE,GAClB,OAAOA"
+  mappings: "CAAC,IAAI,IAAM,SAAUA,GAClB,OAAOC,IAAID;CCDb,IAAI,IAAM,SAAUE,GAClB,OAAOA"
 };
 exports.emptyMap = {
   version: 3,
@@ -307,40 +288,25 @@ function assertMapping(
     assert.equal(
       origMapping.name,
       name,
-      "Incorrect name, expected " +
-        JSON.stringify(name) +
-        ", got " +
-        JSON.stringify(origMapping.name)
+      "Incorrect name, expected " + JSON.stringify(name) + ", got " + JSON.stringify(origMapping.name)
     );
     assert.equal(
       origMapping.line,
       originalLine,
-      "Incorrect line, expected " +
-        JSON.stringify(originalLine) +
-        ", got " +
-        JSON.stringify(origMapping.line)
+      "Incorrect line, expected " + JSON.stringify(originalLine) + ", got " + JSON.stringify(origMapping.line)
     );
     assert.equal(
       origMapping.column,
       originalColumn,
-      "Incorrect column, expected " +
-        JSON.stringify(originalColumn) +
-        ", got " +
-        JSON.stringify(origMapping.column)
+      "Incorrect column, expected " + JSON.stringify(originalColumn) + ", got " + JSON.stringify(origMapping.column)
     );
 
     let expectedSource;
 
-    if (
-      originalSource &&
-      map.sourceRoot &&
-      originalSource.indexOf(map.sourceRoot) === 0
-    ) {
+    if (originalSource && map.sourceRoot && originalSource.indexOf(map.sourceRoot) === 0) {
       expectedSource = originalSource;
     } else if (originalSource) {
-      expectedSource = map.sourceRoot
-        ? util.join(map.sourceRoot, originalSource)
-        : originalSource;
+      expectedSource = map.sourceRoot ? util.join(map.sourceRoot, originalSource) : originalSource;
     } else {
       expectedSource = null;
     }
@@ -348,10 +314,7 @@ function assertMapping(
     assert.equal(
       origMapping.source,
       expectedSource,
-      "Incorrect source, expected " +
-        JSON.stringify(expectedSource) +
-        ", got " +
-        JSON.stringify(origMapping.source)
+      "Incorrect source, expected " + JSON.stringify(expectedSource) + ", got " + JSON.stringify(origMapping.source)
     );
   }
 
@@ -365,18 +328,12 @@ function assertMapping(
     assert.equal(
       genMapping.line,
       generatedLine,
-      "Incorrect line, expected " +
-        JSON.stringify(generatedLine) +
-        ", got " +
-        JSON.stringify(genMapping.line)
+      "Incorrect line, expected " + JSON.stringify(generatedLine) + ", got " + JSON.stringify(genMapping.line)
     );
     assert.equal(
       genMapping.column,
       generatedColumn,
-      "Incorrect column, expected " +
-        JSON.stringify(generatedColumn) +
-        ", got " +
-        JSON.stringify(genMapping.column)
+      "Incorrect column, expected " + JSON.stringify(generatedColumn) + ", got " + JSON.stringify(genMapping.column)
     );
   }
 }
@@ -388,71 +345,41 @@ function assertEqualMaps(assert, actualMap, expectedMap) {
   assert.equal(
     actualMap.names.length,
     expectedMap.names.length,
-    "names length mismatch: " +
-      actualMap.names.join(", ") +
-      " != " +
-      expectedMap.names.join(", ")
+    "names length mismatch: " + actualMap.names.join(", ") + " != " + expectedMap.names.join(", ")
   );
   for (let i = 0; i < actualMap.names.length; i++) {
     assert.equal(
       actualMap.names[i],
       expectedMap.names[i],
-      "names[" +
-        i +
-        "] mismatch: " +
-        actualMap.names.join(", ") +
-        " != " +
-        expectedMap.names.join(", ")
+      "names[" + i + "] mismatch: " + actualMap.names.join(", ") + " != " + expectedMap.names.join(", ")
     );
   }
   assert.equal(
     actualMap.sources.length,
     expectedMap.sources.length,
-    "sources length mismatch: " +
-      actualMap.sources.join(", ") +
-      " != " +
-      expectedMap.sources.join(", ")
+    "sources length mismatch: " + actualMap.sources.join(", ") + " != " + expectedMap.sources.join(", ")
   );
   for (let i = 0; i < actualMap.sources.length; i++) {
     assert.equal(
       actualMap.sources[i],
       expectedMap.sources[i],
-      "sources[" +
-        i +
-        "] length mismatch: " +
-        actualMap.sources.join(", ") +
-        " != " +
-        expectedMap.sources.join(", ")
+      "sources[" + i + "] length mismatch: " + actualMap.sources.join(", ") + " != " + expectedMap.sources.join(", ")
     );
   }
   assert.equal(
     actualMap.sourceRoot,
     expectedMap.sourceRoot,
-    "sourceRoot mismatch: " +
-      actualMap.sourceRoot +
-      " != " +
-      expectedMap.sourceRoot
+    "sourceRoot mismatch: " + actualMap.sourceRoot + " != " + expectedMap.sourceRoot
   );
   assert.equal(
     actualMap.mappings,
     expectedMap.mappings,
-    "mappings mismatch:\nActual:   " +
-      actualMap.mappings +
-      "\nExpected: " +
-      expectedMap.mappings
+    "mappings mismatch:\nActual:   " + actualMap.mappings + "\nExpected: " + expectedMap.mappings
   );
   if (actualMap.sourcesContent) {
-    assert.equal(
-      actualMap.sourcesContent.length,
-      expectedMap.sourcesContent.length,
-      "sourcesContent length mismatch"
-    );
+    assert.equal(actualMap.sourcesContent.length, expectedMap.sourcesContent.length, "sourcesContent length mismatch");
     for (let i = 0; i < actualMap.sourcesContent.length; i++) {
-      assert.equal(
-        actualMap.sourcesContent[i],
-        expectedMap.sourcesContent[i],
-        "sourcesContent[" + i + "] mismatch"
-      );
+      assert.equal(actualMap.sourcesContent[i], expectedMap.sourcesContent[i], "sourcesContent[" + i + "] mismatch");
     }
   }
 }
