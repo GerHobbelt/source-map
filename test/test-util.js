@@ -160,6 +160,12 @@ exports["test join()"] = function(assert) {
   assert.equal(libUtil.join("http://foo.org/", "/a"), "http://foo.org/a");
   assert.equal(libUtil.join("http://foo.org//", "/a"), "http://foo.org/a");
 
+  assert.throws(() => libUtil.join('http://', 'www.example.com'));
+  assert.equal(libUtil.join("file://example/", "/foo/bar"), "file://example/foo/bar");
+  assert.equal(libUtil.join("file:///", "/foo/bar"), "file:///foo/bar");
+  assert.equal(libUtil.join('file:///', 'example.com'), 'file:///example.com');
+  assert.throws(() => libUtil.join('http://', 'ftp://example.com'));
+
   assert.equal(libUtil.join("http://www.example.com", "//foo.org/bar"), "http://foo.org/bar");
   assert.equal(libUtil.join("//www.example.com", "//foo.org/bar"), "//foo.org/bar");
 };
