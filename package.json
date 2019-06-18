@@ -67,7 +67,6 @@
   "scripts": {
     "lint": "eslint *.js lib/ test/",
     "prebuild": "npm run lint",
-    "prettier": "prettier --write --print-width=120 *.{js,ts,json,md} lib/*.js test/*.js bench/bench*",
     "pub": "npm publish --access public",
     "test": "node test/run-tests.js",
     "coverage": "nyc node test/run-tests.js",
@@ -76,6 +75,7 @@
     "dev:watch": "watch 'npm run coverage' lib/ test/",
     "predev": "npm run setup",
     "dev": "npm-run-all -p --silent dev:*",
+    "prettier": "prettier --write --print-width=120 *.{js,ts,json,md} lib/*.js test/*.js bench/bench*",
     "clean": "rm -rf coverage .nyc_output",
     "toc": "bash -c \"doctoc --title '## Table of Contents' README.md && doctoc --title '## Table of Contents' CONTRIBUTING.md\""
   },
