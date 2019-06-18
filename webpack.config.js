@@ -14,8 +14,8 @@ module.exports = [
       path: distDir,
       filename: "source-map.js",
       library: "sourceMap",
-      libraryTarget: "umd",
-    },
+      libraryTarget: "umd"
+    }
   },
 
   // Debug build.
@@ -26,7 +26,7 @@ module.exports = [
       path: distDir,
       filename: "source-map.debug.js",
       library: "sourceMap",
-      libraryTarget: "umd",
+      libraryTarget: "umd"
     },
     devtool: "#inline-source-map"
   },
@@ -39,7 +39,7 @@ module.exports = [
       path: distDir,
       filename: "source-map.min.js",
       library: "sourceMap",
-      libraryTarget: "umd",
+      libraryTarget: "umd"
     },
     devtool: "#source-map"
   }
@@ -66,7 +66,7 @@ function run_test() {
   }
 }
 
-testFiles.forEach(function (file) {
+testFiles.forEach(function(file) {
   module.exports.push({
     entry: path.join(testsDir, file),
     mode: "development",
@@ -75,9 +75,7 @@ testFiles.forEach(function (file) {
       filename: file.replace(/\-/g, "_"),
       library: "SOURCE_MAP_TEST_MODULE"
     },
-    plugins: [
-      new BannerPlugin(run_test.toString() + "\n\n")
-    ],
+    plugins: [new BannerPlugin(run_test.toString() + "\n\n")],
     devtool: "#inline-source-map"
   });
 });

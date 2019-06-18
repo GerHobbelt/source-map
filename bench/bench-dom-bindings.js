@@ -1,10 +1,12 @@
 // Run a benchmark when the given button is clicked and display results in the
 // given element.
 function benchOnClick(button, results, bencher) {
-  button.addEventListener("click", function (e) {
-    e.preventDefault();
-    var stats = bencher();
-    results.innerHTML = `
+  button.addEventListener(
+    "click",
+    function(e) {
+      e.preventDefault();
+      var stats = bencher();
+      results.innerHTML = `
       <table>
         <thead>
           <tr>
@@ -24,13 +26,19 @@ function benchOnClick(button, results, bencher) {
         </tbody>
       </table>
     `;
-  }, false);
+    },
+    false
+  );
 }
 
-benchOnClick(document.getElementById("bench-consumer"),
-             document.getElementById("consumer-results"),
-             benchmarkParseSourceMap);
+benchOnClick(
+  document.getElementById("bench-consumer"),
+  document.getElementById("consumer-results"),
+  benchmarkParseSourceMap
+);
 
-benchOnClick(document.getElementById("bench-generator"),
-             document.getElementById("generator-results"),
-             benchmarkSerializeSourceMap);
+benchOnClick(
+  document.getElementById("bench-generator"),
+  document.getElementById("generator-results"),
+  benchmarkSerializeSourceMap
+);

@@ -22,7 +22,7 @@ function benchmark(name, setup, action) {
 
   // Warm up the JIT.
   var start = Date.now();
-  while ((Date.now() - start) < 5000 /* 5 seconds */) {
+  while (Date.now() - start < 5000 /* 5 seconds */) {
     action();
   }
 
@@ -30,7 +30,7 @@ function benchmark(name, setup, action) {
 
   console.profile(name);
 
-  while ((Date.now() - start) < 30000 /* 30 seconds */) {
+  while (Date.now() - start < 30000 /* 30 seconds */) {
     console.time("iteration");
     var thisIterationStart = Date.now();
     action();
@@ -50,24 +50,28 @@ var smg = null;
 function benchmarkSerializeSourceMap() {
   return benchmark(
     "serialize source map",
-    function () {
+    function() {
       if (!smg) {
         var smc = new sourceMap.SourceMapConsumer(testSourceMap);
         smg = sourceMap.SourceMapGenerator.fromSourceMap(smc);
       }
     },
-    function () {
+    function() {
       benchmarkBlackbox(smg.toString());
     }
   );
 }
 
 function benchmarkParseSourceMap() {
-  return benchmark("parse source map", noop, function () {
+  return benchmark("parse source map", noop, function() {
     var smc = new sourceMap.SourceMapConsumer(testSourceMap);
     if (smc._generatedMappings.length !== EXPECTED_NUMBER_OF_MAPPINGS) {
-      throw new Error("Expected " + EXPECTED_NUMBER_OF_MAPPINGS + " mappings, found "
-                      + smc._generatedMappings.length);
+      throw new Error(
+        "Expected " +
+          EXPECTED_NUMBER_OF_MAPPINGS +
+          " mappings, found " +
+          smc._generatedMappings.length
+      );
     }
     benchmarkBlackbox(smc._generatedMappings.length);
   });
