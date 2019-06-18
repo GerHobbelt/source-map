@@ -1208,6 +1208,38 @@ exports["test index map + originalPositionFor"] = async function(assert) {
     }
   }
 
+  var gen = SourceMapGenerator.fromSourceMap(map);
+  var smStr = JSON.stringify(gen.toJSON(), null, 2);
+  console.warn("generated sourcemap:", smStr);
+  map.destroy();
+
+  console.warn("-----------------------------------");
+  map = await new SourceMapConsumer(smStr);
+  assert.ok(!(map instanceof IndexedSourceMapConsumer));
+
+  map.eachMapping(function(m) {
+    console.warn("mapping:", m);
+  });
+
+  map.sources.forEach(function(s, d) {
+    console.warn("section:", d, s);
+  });
+
+  for (let l = 1; l <= 2; l++) {
+    for (let c = 0; c < 6; c++) {
+      let pos = map.originalPositionFor({
+        line: l,
+        column: c
+      });
+      console.warn("originalPositionFor:", {
+        line: l,
+        column: c,
+        rv: pos
+      });
+    }
+  }
+
+
   var pos = map.originalPositionFor({
     line: 1,
     column: 0
