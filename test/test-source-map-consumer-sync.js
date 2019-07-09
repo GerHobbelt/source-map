@@ -861,17 +861,18 @@ exports["test index map + generatedPositionFor"] = function(assert) {
 };
 
 exports["test index map + originalPositionFor"] = function(assert) {
-  var map = new IndexedSourceMapConsumerSync(util.indexedTestMapWithMappingsAtSectionStart);
+  const map = new SourceMapConsumerSync(util.indexedTestMapWithMappingsAtSectionStart);
+  assert.ok(map instanceof IndexedSourceMapConsumerSync);
 
-  var pos = map.originalPositionFor({
+  let pos = map.originalPositionFor({
     line: 1,
     column: 0
   });
 
-  //  assert.equal(pos.line, 1);
-  //  assert.equal(pos.column, 0);
-  //  assert.equal(pos.source, "foo.js");
-  //  assert.equal(pos.name, "first");
+  assert.equal(pos.line, 1);
+  assert.equal(pos.column, 0);
+  assert.equal(pos.source, "foo.js");
+  assert.equal(pos.name, "first");
 
   pos = map.originalPositionFor({
     line: 1,
@@ -888,10 +889,10 @@ exports["test index map + originalPositionFor"] = function(assert) {
     column: 2
   });
 
-  //  assert.equal(pos.line, 1);
-  //  assert.equal(pos.column, 0);
-  //  assert.equal(pos.source, "baz.js");
-  //  assert.equal(pos.name, "third");
+  assert.equal(pos.line, 1);
+  assert.equal(pos.column, 0);
+  assert.equal(pos.source, "baz.js");
+  assert.equal(pos.name, "third");
 
   pos = map.originalPositionFor({
     line: 1,
@@ -1259,6 +1260,25 @@ exports["test sourceRoot + originalPositionFor"] = function(assert) {
   assert.equal(pos.source, "foo/bar/bang.coffee");
   assert.equal(pos.line, 1);
   assert.equal(pos.column, 1);
+
+  map.destroy();
+};
+
+exports["test github issue #56"] = function(assert) {
+  let map = new SourceMapGenerator({
+    sourceRoot: "http://www.example.com",
+    file: "/foo.js"
+  });
+  map.addMapping({
+    original: { line: 1, column: 1 },
+    generated: { line: 2, column: 2 },
+    source: "/original.js"
+  });
+  map = new SourceMapConsumerSync(map.toString());
+
+  const sources = map.sources;
+  assert.equal(sources.length, 1);
+  assert.equal(sources[0], "http://www.example.com/original.js");
 
   map.destroy();
 };
@@ -1804,4 +1824,98 @@ exports["test SourceMapConsumerSync.with and exceptions"] = function(assert) {
 
   assert.equal(error, 6);
   assert.equal(consumer._mappingsPtr, 0);
+};
+
+exports["test mapping without section in an indexed map"] = function(assert) {
+  const map = {
+    version: 3,
+    sections: [
+      {
+        offset: { line: 0, column: 0 },
+        map: {
+          version: 3,
+          names: [],
+          sources: [],
+          mappings: "A"
+        }
+      }
+    ]
+  };
+  const consumer = new SourceMapConsumerSync(map);
+  let mappings = [];
+  consumer.eachMapping(function(mapping) {
+    mappings.push(mapping);
+  });
+
+  assert.equal(mappings.length, 1);
+  assert.equal(mappings[0].source, null);
+  assert.equal(mappings[0].generatedLine, 1);
+  assert.equal(mappings[0].generatedColumn, 0);
+  assert.equal(mappings[0].originalLine, null);
+  assert.equal(mappings[0].originalColumn, null);
+  assert.equal(mappings[0].name, null);
+
+  consumer.destroy();
+};
+
+exports["test mapping without name in an indexed map"] = function(assert) {
+  const map = {
+    version: 3,
+    sections: [
+      {
+        offset: { line: 0, column: 0 },
+        map: {
+          version: 3,
+          names: [],
+          sources: ["foo.js"],
+          mappings: "AAAA"
+        }
+      }
+    ]
+  };
+  const consumer = new SourceMapConsumerSync(map);
+  let mappings = [];
+  consumer.eachMapping(function(mapping) {
+    mappings.push(mapping);
+  });
+
+  assert.equal(mappings.length, 1);
+  assert.equal(mappings[0].generatedLine, 1);
+  assert.equal(mappings[0].generatedColumn, 0);
+  assert.equal(mappings[0].originalLine, 1);
+  assert.equal(mappings[0].originalColumn, 0);
+  assert.equal(mappings[0].name, null);
+
+  consumer.destroy();
+};
+
+exports["test mapping with name=0 in an indexed map"] = function(assert) {
+  const map = {
+    version: 3,
+    sections: [
+      {
+        offset: { line: 0, column: 0 },
+        map: {
+          version: 3,
+          names: ["first"],
+          sources: ["foo.js"],
+          mappings: "AAAAA"
+        }
+      }
+    ]
+  };
+  const consumer = new SourceMapConsumerSync(map);
+  let mappings = [];
+  consumer.eachMapping(function(mapping) {
+    mappings.push(mapping);
+  });
+
+  assert.equal(mappings.length, 1);
+  assert.equal(mappings[0].generatedLine, 1);
+  assert.equal(mappings[0].generatedColumn, 0);
+  assert.equal(mappings[0].originalLine, 1);
+  assert.equal(mappings[0].originalColumn, 0);
+  assert.equal(mappings[0].name, "first");
+
+  consumer.destroy();
 };
