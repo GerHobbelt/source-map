@@ -285,6 +285,7 @@ function assertMapping(
       column: generatedColumn,
       bias
     });
+    console.warn("origMapping:", JSON.stringify(origMapping, null, 2))
     assert.equal(
       origMapping.name,
       name,
