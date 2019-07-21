@@ -179,30 +179,12 @@ exports["test mapping tokens fuzzy"] = function(assert) {
   util.assertMapping(2, 12, "/the/root/two.js", 1, 11, null, null, map, assert, true);
 
   // Finding original positions with lub bias.
-  util.assertMapping(
-    1,
-    16,
-    "/the/root/one.js",
-    1,
-    21,
-    "bar",
-    SourceMapConsumerSync.LEAST_UPPER_BOUND,
-    map,
-    assert,
-    true
-  );
-  util.assertMapping(
-    1,
-    26,
-    "/the/root/one.js",
-    2,
-    10,
-    "baz",
-    SourceMapConsumerSync.LEAST_UPPER_BOUND,
-    map,
-    assert,
-    true
-  );
+  util.assertMapping(1, 16, null, null, null, null, SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, true);
+  util.assertMapping(1, 18, "/the/root/one.js", 1, 21, "bar", SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, true);
+  util.assertMapping(1, 19, "/the/root/one.js", 1, 22, "bar", SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, true);
+  util.assertMapping(1, 26, "/the/root/one.js", 2, 8, null, SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, true);
+  util.assertMapping(1, 28, "/the/root/one.js", 2, 10, "baz", SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, true);
+  util.assertMapping(1, 29, "/the/root/one.js", 2, 11, "baz", SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, true);
   util.assertMapping(2, 6, "/the/root/two.js", 1, 11, null, SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, true);
 
   // Finding generated positions with default (glb) bias.
@@ -263,30 +245,12 @@ exports["test mapping tokens fuzzy in indexed source map"] = function(assert) {
   util.assertMapping(2, 12, "/the/root/two.js", 1, 11, null, null, map, assert, true);
 
   // Finding original positions with lub bias.
-  util.assertMapping(
-    1,
-    16,
-    "/the/root/one.js",
-    1,
-    21,
-    "bar",
-    SourceMapConsumerSync.LEAST_UPPER_BOUND,
-    map,
-    assert,
-    true
-  );
-  util.assertMapping(
-    1,
-    26,
-    "/the/root/one.js",
-    2,
-    10,
-    "baz",
-    SourceMapConsumerSync.LEAST_UPPER_BOUND,
-    map,
-    assert,
-    true
-  );
+  util.assertMapping(1, 16, null, null, null, null, SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, true);
+  util.assertMapping(1, 18, "/the/root/one.js", 1, 21, "bar", SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, true);
+  util.assertMapping(1, 19, "/the/root/one.js", 1, 22, "bar", SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, true);
+  util.assertMapping(1, 26, "/the/root/one.js", 2, 8, null, SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, true);
+  util.assertMapping(1, 28, "/the/root/one.js", 2, 10, "baz", SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, true);
+  util.assertMapping(1, 29, "/the/root/one.js", 2, 11, "baz", SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, true);
   util.assertMapping(2, 6, "/the/root/two.js", 1, 11, null, SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, true);
 
   // Finding generated positions with default (glb) bias.
@@ -361,25 +325,18 @@ exports["test mappings and end of lines"] = function(assert) {
   const map = SourceMapConsumerSync.fromSourceMap(smg);
 
   // When finding original positions, mappings end at the end of the line.
-  util.assertMapping(2, 1, null, null, null, null, null, map, assert, true);
+  util.assertMapping(1, 1, "baz.js", 1, 1, null, null, map, assert, true);
+  util.assertMapping(2, 0, "baz.js", 2, 0, null, null, map, assert, true);
+  util.assertMapping(2, 1, "baz.js", 2, 1, null, null, map, assert, true);
+  util.assertMapping(2, 2, "bar.js", 2, 2, null, null, map, assert, true);
+  util.assertMapping(2, 3, "bar.js", 2, 3, null, null, map, assert, true);
+  util.assertMapping(3, 1, "bar.js", 3, 1, null, null, map, assert, true);
 
   // When finding generated positions, mappings do not end at the end of the line.
   util.assertMapping(1, 1, "bar.js", 2, 1, null, null, map, assert, null, true);
 
   // When finding generated positions with, mappings end at the end of the source.
-  util.assertMapping(
-    null,
-    null,
-    "bar.js",
-    3,
-    1,
-    null,
-    SourceMapConsumerSync.LEAST_UPPER_BOUND,
-    map,
-    assert,
-    null,
-    true
-  );
+  util.assertMapping(null, null, "bar.js", 3, 1, null, SourceMapConsumerSync.LEAST_UPPER_BOUND, map, assert, null, true);
 
   map.destroy();
 };
@@ -1556,10 +1513,7 @@ exports["test issue #191"] = function(assert) {
   // throw.
   generator.toJSON();
 
-  assert.ok(
-    true,
-    "Using a SourceMapGenerator again after creating a " + "SourceMapConsumerSync from it should not throw"
-  );
+  assert.ok(true, "Using a SourceMapGenerator again after creating a SourceMapConsumerSync from it should not throw");
 
   consumer.destroy();
 };
@@ -1785,7 +1739,7 @@ exports["test SourceMapConsumerSync.with"] = function(assert) {
     // Don't keep references to the consumer around at home, kids.
     consumer = c;
 
-    // We should properly treat the with callback as an function.
+    // We should properly treat the with callback as a function.
 
     // Should not have parsed and allocated mappings yet.
     assert.equal(c._mappingsPtr, 0);
