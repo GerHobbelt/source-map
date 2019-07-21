@@ -285,7 +285,41 @@ function assertMapping(
       column: generatedColumn,
       bias
     });
-    console.warn("origMapping:", JSON.stringify(origMapping, null, 2))
+    console.warn("origMapping:", JSON.stringify(origMapping, null, 2), "for input:", {
+  generatedLine,
+  generatedColumn,
+  originalSource,
+  originalLine,
+  originalColumn,
+  name,
+  bias,
+  dontTestGenerated,
+  dontTestOriginal
+});
+
+    let expectedSource;
+
+    if (originalSource && map.sourceRoot && originalSource.indexOf(map.sourceRoot) === 0) {
+      expectedSource = originalSource;
+    } else if (originalSource) {
+      expectedSource = map.sourceRoot ? util.join(map.sourceRoot, originalSource) : originalSource;
+    } else {
+      expectedSource = null;
+    }
+
+    console.warn("expected: assertMapping(", JSON.stringify({
+  generatedLine,
+  generatedColumn,
+  originalSource: origMapping.source,
+  originalLine: origMapping.line,
+  originalColumn: origMapping.column,
+  name: origMapping.name,
+  bias,
+  map: "<map>",
+  assert:  "<assert>",
+  dontTestGenerated: !!dontTestGenerated,
+  dontTestOriginal: !!dontTestOriginal
+}));
     assert.equal(
       origMapping.name,
       name,
@@ -301,16 +335,6 @@ function assertMapping(
       originalColumn,
       "Incorrect column, expected " + JSON.stringify(originalColumn) + ", got " + JSON.stringify(origMapping.column)
     );
-
-    let expectedSource;
-
-    if (originalSource && map.sourceRoot && originalSource.indexOf(map.sourceRoot) === 0) {
-      expectedSource = originalSource;
-    } else if (originalSource) {
-      expectedSource = map.sourceRoot ? util.join(map.sourceRoot, originalSource) : originalSource;
-    } else {
-      expectedSource = null;
-    }
 
     assert.equal(
       origMapping.source,
