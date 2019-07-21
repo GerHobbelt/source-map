@@ -285,17 +285,6 @@ function assertMapping(
       column: generatedColumn,
       bias
     });
-    console.warn("origMapping:", JSON.stringify(origMapping, null, 2), "for input:", {
-  generatedLine,
-  generatedColumn,
-  originalSource,
-  originalLine,
-  originalColumn,
-  name,
-  bias,
-  dontTestGenerated,
-  dontTestOriginal
-});
 
     let expectedSource;
 
@@ -307,19 +296,6 @@ function assertMapping(
       expectedSource = null;
     }
 
-    console.warn("expected: assertMapping(", JSON.stringify({
-  generatedLine,
-  generatedColumn,
-  originalSource: origMapping.source,
-  originalLine: origMapping.line,
-  originalColumn: origMapping.column,
-  name: origMapping.name,
-  bias,
-  map: "<map>",
-  assert:  "<assert>",
-  dontTestGenerated: !!dontTestGenerated,
-  dontTestOriginal: !!dontTestOriginal
-}));
     assert.equal(
       origMapping.name,
       name,
