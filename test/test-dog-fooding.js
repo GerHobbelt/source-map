@@ -70,7 +70,7 @@ exports["test eating our own dog food"] = async function(assert) {
   util.assertMapping(6, 13, "/wu/tang/gza.coffee", 5, 10, null, null, smc, assert, true);
 
   // Generated to original with lub bias.
-  util.assertMapping(2, 0, null, null, null, null, SourceMapConsumer.LEAST_UPPER_BOUND, smc, assert, true);
+  util.assertMapping(2, 0, "/wu/tang/gza.coffee", 1, 0, null, SourceMapConsumer.LEAST_UPPER_BOUND, smc, assert, true);
   util.assertMapping(2, 9, null, null, null, null, SourceMapConsumer.LEAST_UPPER_BOUND, smc, assert, true);
   util.assertMapping(3, 0, "/wu/tang/gza.coffee", 2, 0, null, SourceMapConsumer.LEAST_UPPER_BOUND, smc, assert, true);
   util.assertMapping(3, 9, null, null, null, null, SourceMapConsumer.LEAST_UPPER_BOUND, smc, assert, true);
